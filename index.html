@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dinner Shuffle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Monthly Dinner Planner</p>
+          <h1>Build a month of dinners from your own meal list.</h1>
+          <p class="hero-text">
+            Add the dinners your household actually wants, then generate a month
+            where each dinner is planned for two days at a time.
+          </p>
+        </div>
+        <div class="hero-card">
+          <p class="hero-card-label">Planner Rules</p>
+          <ul>
+            <li>One dinner covers two days.</li>
+            <li>Meals are shuffled for variety.</li>
+            <li>Plans can be regenerated instantly.</li>
+          </ul>
+        </div>
+      </header>
+
+      <main class="app-grid">
+        <section class="panel controls-panel">
+          <div class="panel-heading">
+            <h2>Your dinners</h2>
+            <p>Enter one dinner per line, or add them individually.</p>
+          </div>
+
+          <form id="dinner-form" class="dinner-form">
+            <label class="field-label" for="dinner-input">Add a dinner</label>
+            <div class="input-row">
+              <input
+                id="dinner-input"
+                name="dinner"
+                type="text"
+                maxlength="80"
+                placeholder="Example: Baked salmon with potatoes"
+                autocomplete="off"
+              />
+              <button type="submit" class="primary-button">Add</button>
+            </div>
+          </form>
+
+          <label class="field-label" for="bulk-input">Bulk list</label>
+          <textarea
+            id="bulk-input"
+            rows="8"
+            placeholder="Pasta primavera&#10;Chicken stir fry&#10;Tacos"
+          ></textarea>
+          <div class="action-row">
+            <button id="load-bulk-button" type="button" class="secondary-button">
+              Load list
+            </button>
+            <button id="clear-dinners-button" type="button" class="ghost-button">
+              Clear all
+            </button>
+          </div>
+
+          <div class="saved-dinners">
+            <div class="saved-dinners-header">
+              <h3>Saved dinners</h3>
+              <span id="dinner-count">0 meals</span>
+            </div>
+            <ul id="dinner-list" class="dinner-list"></ul>
+          </div>
+        </section>
+
+        <section class="panel planner-panel">
+          <div class="panel-heading">
+            <h2>Generate the month</h2>
+            <p>Select a month, then create a dinner plan for every day.</p>
+          </div>
+
+          <div class="planner-controls">
+            <label class="field-label" for="month-input">Month</label>
+            <input id="month-input" type="month" />
+            <label class="field-label" for="soup-spacing-input">
+              Non-zupa meals between zupa meals
+            </label>
+            <input
+              id="soup-spacing-input"
+              type="number"
+              min="1"
+              max="6"
+              step="1"
+              value="1"
+            />
+            <div class="action-row planner-actions">
+              <button id="generate-button" type="button" class="primary-button">
+                Propose dinners
+              </button>
+              <button id="shuffle-button" type="button" class="secondary-button">
+                Regenerate
+              </button>
+            </div>
+            <p class="planner-note">
+              Meals that start with Zupa can be spaced out automatically, and you can manually
+              change any proposed dinner after the month is generated.
+            </p>
+          </div>
+
+          <div id="message-box" class="message-box" aria-live="polite"></div>
+
+          <section class="summary-card" id="summary-card">
+            <p class="summary-label">Plan summary</p>
+            <h3 id="summary-title">No month generated yet</h3>
+            <p id="summary-text">Add dinners and generate a schedule to begin.</p>
+          </section>
+
+          <div id="calendar" class="calendar"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="dinner-item-template">
+      <li class="dinner-item">
+        <span class="dinner-name"></span>
+        <button type="button" class="delete-button" aria-label="Remove dinner">
+          Remove
+        </button>
+      </li>
+    </template>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

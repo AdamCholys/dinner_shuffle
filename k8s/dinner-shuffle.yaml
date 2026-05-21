@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dinner-shuffle
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dinner-shuffle-data
+  namespace: dinner-shuffle
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-path
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dinner-shuffle
+  namespace: dinner-shuffle
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: dinner-shuffle
+  template:
+    metadata:
+      labels:
+        app: dinner-shuffle
+    spec:
+      containers:
+        - name: dinner-shuffle
+          image: dinner-shuffle:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+              name: http
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dinner-shuffle-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dinner-shuffle
+  namespace: dinner-shuffle
+spec:
+  type: NodePort
+  selector:
+    app: dinner-shuffle
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+      nodePort: 30080

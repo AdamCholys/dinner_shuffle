@@ -1,0 +1,11 @@
+services:
+  dinner-shuffle:
+    image: dinner-shuffle:latest
+    build:
+      context: .
+    container_name: dinner-shuffle
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

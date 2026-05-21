@@ -1,0 +1,441 @@
+:root {
+  --bg: #f7f0e8;
+  --bg-accent: #e5d1bf;
+  --surface: rgba(255, 250, 244, 0.88);
+  --surface-strong: #fff8f1;
+  --surface-alt: #f1e2d3;
+  --text: #302117;
+  --muted: #705240;
+  --accent: #c25b2f;
+  --accent-dark: #8f3410;
+  --border: rgba(77, 43, 24, 0.12);
+  --shadow: 0 24px 60px rgba(91, 49, 21, 0.12);
+  --radius-large: 28px;
+  --radius-medium: 18px;
+  --radius-small: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Manrope", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(194, 91, 47, 0.16), transparent 26%),
+    linear-gradient(135deg, #f8eee3 0%, var(--bg) 48%, #eddcca 100%);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 48px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 28px;
+}
+
+.hero-copy,
+.hero-card,
+.panel,
+.summary-card,
+.day-card {
+  backdrop-filter: blur(12px);
+}
+
+.hero-copy,
+.hero-card,
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  padding: 36px;
+}
+
+.eyebrow,
+.hero-card-label,
+.summary-label,
+.field-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.hero-copy h1,
+.panel-heading h2,
+.summary-card h3 {
+  font-family: "Fraunces", serif;
+  line-height: 1;
+}
+
+.hero-copy h1 {
+  margin: 10px 0 16px;
+  font-size: clamp(2.6rem, 5vw, 4.7rem);
+  max-width: 10ch;
+}
+
+.hero-text,
+.panel-heading p,
+.summary-card p,
+.message-box {
+  color: var(--muted);
+}
+
+.hero-card {
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(255, 248, 241, 0.94), rgba(237, 220, 202, 0.94));
+}
+
+.hero-card ul {
+  margin: 16px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.panel {
+  padding: 28px;
+}
+
+.panel-heading h2 {
+  margin: 12px 0 8px;
+  font-size: 2rem;
+}
+
+.panel-heading p {
+  margin: 0 0 22px;
+}
+
+.planner-note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+#soup-spacing-input {
+  max-width: 150px;
+}
+
+.dinner-form,
+.planner-controls {
+  display: grid;
+  gap: 10px;
+}
+
+.input-row,
+.action-row {
+  display: flex;
+  gap: 12px;
+}
+
+input,
+textarea,
+.primary-button,
+.secondary-button,
+.ghost-button,
+.delete-button {
+  border-radius: var(--radius-small);
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(77, 43, 24, 0.16);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px 16px;
+  color: var(--text);
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid rgba(194, 91, 47, 0.25);
+  border-color: rgba(194, 91, 47, 0.42);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 180px;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  transition: transform 180ms ease, opacity 180ms ease, background 180ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button,
+.delete-button {
+  padding: 13px 18px;
+  font-weight: 700;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent) 0%, #db7a3b 100%);
+  color: #fff8f1;
+}
+
+.secondary-button {
+  background: rgba(194, 91, 47, 0.12);
+  color: var(--accent-dark);
+}
+
+.ghost-button,
+.delete-button {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(77, 43, 24, 0.12);
+}
+
+.saved-dinners {
+  margin-top: 22px;
+}
+
+.saved-dinners-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.saved-dinners-header h3 {
+  margin: 0;
+}
+
+.dinner-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.dinner-item,
+.day-card,
+.summary-card,
+.message-box {
+  border: 1px solid var(--border);
+}
+
+.dinner-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.planner-actions {
+  margin-top: 8px;
+}
+
+.message-box {
+  min-height: 54px;
+  margin: 18px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 248, 241, 0.84);
+}
+
+.message-box[data-state="error"] {
+  color: #8d2d17;
+  background: rgba(248, 220, 212, 0.94);
+}
+
+.message-box[data-state="success"] {
+  color: #245430;
+  background: rgba(221, 241, 226, 0.94);
+}
+
+.summary-card {
+  padding: 22px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255, 248, 241, 0.94), rgba(240, 226, 211, 0.9));
+}
+
+.summary-card h3 {
+  margin: 8px 0 10px;
+  font-size: 1.7rem;
+}
+
+.summary-card p:last-child {
+  margin-bottom: 0;
+}
+
+.calendar {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+}
+
+.day-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 252, 247, 0.82);
+}
+
+.day-number {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: rgba(194, 91, 47, 0.12);
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+
+.weekday {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.meal-name {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.meal-meta {
+  display: grid;
+  gap: 10px;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+}
+
+.category-badge.is-zupa {
+  background: rgba(201, 91, 30, 0.14);
+  color: #8f3410;
+}
+
+.category-badge.is-non-zupa {
+  background: rgba(58, 110, 83, 0.14);
+  color: #245430;
+}
+
+.category-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.meal-editor-label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.meal-editor {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(77, 43, 24, 0.16);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--text);
+}
+
+.meal-editor:focus {
+  outline: 2px solid rgba(194, 91, 47, 0.25);
+  border-color: rgba(194, 91, 47, 0.42);
+}
+
+.day-range {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(194, 91, 47, 0.1);
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy h1 {
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 20px, 100%);
+    padding-top: 20px;
+  }
+
+  .hero-copy,
+  .hero-card,
+  .panel {
+    padding: 22px;
+  }
+
+  .input-row,
+  .action-row,
+  .saved-dinners-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calendar {
+    grid-template-columns: 1fr;
+  }
+}
