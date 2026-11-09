@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dinner Shuffle</title>
+    <title>Obiad Shuffle</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
@@ -16,19 +16,20 @@
     <div class="page-shell">
       <header class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Monthly Dinner Planner</p>
-          <h1>Build a month of dinners from your own meal list.</h1>
+          <p class="eyebrow">Miesięczny planer obiadów</p>
+          <h1>Cały miesiąc obiadów z Waszej listy.</h1>
           <p class="hero-text">
-            Add the dinners your household actually wants, then generate a month
-            where each dinner is planned for two days at a time.
+            Dodaj obiady, które naprawdę chcecie jeść, i wylosuj miesiąc, w którym
+            każdy obiad starcza na dwa dni.
           </p>
         </div>
         <div class="hero-card">
-          <p class="hero-card-label">Planner Rules</p>
+          <p class="hero-card-label">Zasady planu</p>
           <ul>
-            <li>One dinner covers two days.</li>
-            <li>Meals are shuffled for variety.</li>
-            <li>Plans can be regenerated instantly.</li>
+            <li>Jeden obiad na dwa kolejne dni.</li>
+            <li>Zupy są rozłożone co kilka obiadów.</li>
+            <li>Zablokuj ulubione sloty i losuj resztę od nowa.</li>
+            <li>Dania z poprzedniego miesiąca trafiają na koniec kolejki.</li>
           </ul>
         </div>
       </header>
@@ -36,44 +37,51 @@
       <main class="app-grid">
         <section class="panel controls-panel">
           <div class="panel-heading">
-            <h2>Your dinners</h2>
-            <p>Enter one dinner per line, or add them individually.</p>
+            <h2>Wasze obiady</h2>
+            <p>Dodawaj obiady pojedynczo albo wklej całą listę, po jednym w linii.</p>
           </div>
 
           <form id="dinner-form" class="dinner-form">
-            <label class="field-label" for="dinner-input">Add a dinner</label>
+            <label class="field-label" for="dinner-input">Dodaj obiad</label>
             <div class="input-row">
               <input
                 id="dinner-input"
                 name="dinner"
                 type="text"
                 maxlength="80"
-                placeholder="Example: Baked salmon with potatoes"
+                placeholder="Np. Pierogi ruskie"
                 autocomplete="off"
               />
-              <button type="submit" class="primary-button">Add</button>
+              <button type="submit" class="primary-button">Dodaj</button>
             </div>
           </form>
 
-          <label class="field-label" for="bulk-input">Bulk list</label>
+          <label class="field-label" for="bulk-input">Lista zbiorcza</label>
           <textarea
             id="bulk-input"
-            rows="8"
-            placeholder="Pasta primavera&#10;Chicken stir fry&#10;Tacos"
+            rows="6"
+            placeholder="Spaghetti&#10;Zupa pomidorowa&#10;Leczo"
           ></textarea>
           <div class="action-row">
             <button id="load-bulk-button" type="button" class="secondary-button">
-              Load list
+              Wczytaj listę
             </button>
             <button id="clear-dinners-button" type="button" class="ghost-button">
-              Clear all
+              Wyczyść listę
             </button>
+          </div>
+          <div id="clear-dinners-confirm" class="confirm-bar" hidden>
+            <span class="confirm-text"></span>
+            <div class="confirm-actions">
+              <button type="button" class="danger-button" data-answer="yes">Tak, usuń</button>
+              <button type="button" class="ghost-button" data-answer="no">Anuluj</button>
+            </div>
           </div>
 
           <div class="saved-dinners">
             <div class="saved-dinners-header">
-              <h3>Saved dinners</h3>
-              <span id="dinner-count">0 meals</span>
+              <h3>Zapisane obiady</h3>
+              <span id="dinner-count">0 obiadów</span>
             </div>
             <ul id="dinner-list" class="dinner-list"></ul>
           </div>
@@ -81,47 +89,65 @@
 
         <section class="panel planner-panel">
           <div class="panel-heading">
-            <h2>Generate the month</h2>
-            <p>Select a month, then create a dinner plan for every day.</p>
+            <h2>Plan miesiąca</h2>
+            <p>Wybierz miesiąc i wylosuj plan. Każdy slot możesz potem zmienić, zablokować albo przelosować.</p>
           </div>
 
           <div class="planner-controls">
-            <label class="field-label" for="month-input">Month</label>
-            <input id="month-input" type="month" />
-            <label class="field-label" for="soup-spacing-input">
-              Non-zupa meals between zupa meals
-            </label>
-            <input
-              id="soup-spacing-input"
-              type="number"
-              min="1"
-              max="6"
-              step="1"
-              value="1"
-            />
-            <div class="action-row planner-actions">
-              <button id="generate-button" type="button" class="primary-button">
-                Propose dinners
-              </button>
-              <button id="shuffle-button" type="button" class="secondary-button">
-                Regenerate
-              </button>
+            <div class="control-group">
+              <label class="field-label" for="month-input">Miesiąc</label>
+              <div class="month-picker">
+                <button id="prev-month-button" type="button" class="icon-button" aria-label="Poprzedni miesiąc">‹</button>
+                <input id="month-input" type="month" />
+                <button id="next-month-button" type="button" class="icon-button" aria-label="Następny miesiąc">›</button>
+              </div>
             </div>
-            <p class="planner-note">
-              Meals that start with Zupa can be spaced out automatically, and you can manually
-              change any proposed dinner after the month is generated.
-            </p>
+            <div class="control-group">
+              <label class="field-label" for="soup-spacing-input">Obiady między zupami</label>
+              <input id="soup-spacing-input" type="number" min="1" max="6" step="1" value="1" />
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input id="avoid-previous-input" type="checkbox" checked />
+            <span>Unikaj obiadów z poprzedniego miesiąca, jeśli się da</span>
+          </label>
+
+          <div class="action-row planner-actions">
+            <button id="generate-button" type="button" class="primary-button">Wylosuj plan</button>
+            <button id="delete-plan-button" type="button" class="ghost-button" hidden>Usuń plan</button>
+          </div>
+          <div id="delete-plan-confirm" class="confirm-bar" hidden>
+            <span class="confirm-text"></span>
+            <div class="confirm-actions">
+              <button type="button" class="danger-button" data-answer="yes">Tak, usuń</button>
+              <button type="button" class="ghost-button" data-answer="no">Anuluj</button>
+            </div>
           </div>
 
           <div id="message-box" class="message-box" aria-live="polite"></div>
 
-          <section class="summary-card" id="summary-card">
-            <p class="summary-label">Plan summary</p>
-            <h3 id="summary-title">No month generated yet</h3>
-            <p id="summary-text">Add dinners and generate a schedule to begin.</p>
+          <section class="summary-card">
+            <p class="summary-label">Podsumowanie</p>
+            <h3 id="summary-title">Brak planu</h3>
+            <p id="summary-text">Dodaj obiady i wylosuj plan, aby zacząć.</p>
+            <p id="rule-notice" class="rule-notice" hidden></p>
           </section>
 
-          <div id="calendar" class="calendar"></div>
+          <div id="history" class="history" hidden>
+            <p class="field-label">Zapisane plany</p>
+            <div id="history-list" class="history-list"></div>
+          </div>
+
+          <div id="calendar" class="calendar" aria-label="Kalendarz obiadów"></div>
+
+          <section id="slots-section" class="slots-section" hidden>
+            <div class="slots-header">
+              <h3>Sloty</h3>
+              <p>🔒 zablokowany slot zostaje przy ponownym losowaniu, 🎲 losuje inny obiad tylko dla tego slotu.</p>
+            </div>
+            <ol id="slot-list" class="slot-list"></ol>
+          </section>
         </section>
       </main>
     </div>
@@ -129,9 +155,7 @@
     <template id="dinner-item-template">
       <li class="dinner-item">
         <span class="dinner-name"></span>
-        <button type="button" class="delete-button" aria-label="Remove dinner">
-          Remove
-        </button>
+        <button type="button" class="delete-button">Usuń</button>
       </li>
     </template>
 

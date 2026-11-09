@@ -19,6 +19,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -32,7 +36,8 @@ body {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -53,8 +58,7 @@ textarea {
 .hero-copy,
 .hero-card,
 .panel,
-.summary-card,
-.day-card {
+.summary-card {
   backdrop-filter: blur(12px);
 }
 
@@ -139,12 +143,8 @@ textarea {
   font-size: 0.92rem;
 }
 
-#soup-spacing-input {
-  max-width: 150px;
-}
-
 .dinner-form,
-.planner-controls {
+.control-group {
   display: grid;
   gap: 10px;
 }
@@ -165,7 +165,8 @@ textarea,
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid rgba(77, 43, 24, 0.16);
   background: rgba(255, 255, 255, 0.7);
@@ -174,6 +175,7 @@ textarea {
 }
 
 input:focus,
+select:focus,
 textarea:focus {
   outline: 2px solid rgba(194, 91, 47, 0.25);
   border-color: rgba(194, 91, 47, 0.42);
@@ -247,7 +249,6 @@ button:active {
 }
 
 .dinner-item,
-.day-card,
 .summary-card,
 .message-box {
   border: 1px solid var(--border);
@@ -300,48 +301,262 @@ button:active {
   margin-bottom: 0;
 }
 
+
+.planner-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.month-picker {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.icon-button {
+  flex: none;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  border-radius: var(--radius-small);
+  background: rgba(194, 91, 47, 0.12);
+  color: var(--accent-dark);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+  transform: none;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.checkbox-row input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--accent);
+}
+
+.danger-button {
+  padding: 11px 16px;
+  border-radius: var(--radius-small);
+  background: #a33a1c;
+  color: #fff8f1;
+  font-weight: 700;
+}
+
+.confirm-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(163, 58, 28, 0.28);
+  border-radius: 14px;
+  background: rgba(248, 220, 212, 0.7);
+  color: #6e2410;
+  font-weight: 500;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-actions .ghost-button {
+  padding: 11px 16px;
+}
+
+.rule-notice {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(233, 180, 76, 0.2);
+  color: #6b4a08 !important;
+  font-size: 0.92rem;
+}
+
+.history {
+  margin-top: 18px;
+}
+
+.history .field-label {
+  margin: 0 0 10px;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-chip {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.history-chip.is-active {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff8f1;
+}
+
 .calendar {
   margin-top: 22px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
 }
 
-.day-card {
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(255, 252, 247, 0.82);
+.calendar-head {
+  padding: 4px 0;
+  text-align: center;
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.day-number {
-  display: inline-flex;
-  width: 34px;
-  height: 34px;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-  border-radius: 50%;
+.calendar-day {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 92px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: left;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.calendar-day:hover {
+  transform: none;
+}
+
+.calendar-day.slot-tone-0 {
+  background: rgba(255, 252, 247, 0.9);
+}
+
+.calendar-day.slot-tone-1 {
+  background: rgba(241, 226, 211, 0.75);
+}
+
+.calendar-day.is-zupa {
+  box-shadow: inset 3px 0 0 #c9741e;
+}
+
+.calendar-day.is-today {
+  border: 2px solid var(--accent);
+}
+
+.calendar-day.is-highlighted,
+.slot-row.is-highlighted {
+  border-color: rgba(194, 91, 47, 0.55);
   background: rgba(194, 91, 47, 0.12);
+}
+
+.calendar-day-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendar-day-number {
   color: var(--accent-dark);
   font-weight: 800;
 }
 
-.weekday {
-  display: block;
-  margin-bottom: 8px;
+.calendar-weekday {
+  display: none;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
-.meal-name {
-  font-size: 1rem;
+.calendar-lock {
+  margin-left: auto;
+  font-size: 0.75rem;
+}
+
+.calendar-meal {
+  font-size: 0.82rem;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
-.meal-meta {
+.slots-section {
+  margin-top: 28px;
+}
+
+.slots-header h3 {
+  margin: 0 0 4px;
+  font-family: "Fraunces", serif;
+  font-size: 1.5rem;
+}
+
+.slots-header p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.slot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
+  gap: 8px;
+}
+
+.slot-row {
+  display: grid;
+  grid-template-columns: 74px 38px minmax(0, 1fr) 44px 44px;
+  align-items: center;
   gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.slot-row.is-locked {
+  background: rgba(233, 180, 76, 0.16);
+}
+
+.slot-range {
+  display: grid;
+  line-height: 1.25;
+}
+
+.slot-range span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.lock-button[aria-pressed="true"] {
+  background: rgba(233, 180, 76, 0.35);
 }
 
 .category-badge {
@@ -369,40 +584,10 @@ button:active {
   display: block;
 }
 
-.meal-editor-label {
-  display: block;
-  margin-top: 12px;
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
 .meal-editor {
-  width: 100%;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(77, 43, 24, 0.16);
   background: rgba(255, 255, 255, 0.76);
-  color: var(--text);
-}
-
-.meal-editor:focus {
-  outline: 2px solid rgba(194, 91, 47, 0.25);
-  border-color: rgba(194, 91, 47, 0.42);
-}
-
-.day-range {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(194, 91, 47, 0.1);
-  color: var(--accent-dark);
-  font-size: 0.8rem;
-  font-weight: 700;
 }
 
 @media (max-width: 960px) {
@@ -413,6 +598,11 @@ button:active {
 
   .hero-copy h1 {
     max-width: none;
+  }
+
+  /* On a single column, show the plan before the long dinner list. */
+  .planner-panel {
+    order: -1;
   }
 }
 
@@ -435,7 +625,68 @@ button:active {
     align-items: stretch;
   }
 
+  .planner-controls {
+    grid-template-columns: 1fr;
+  }
+
+  /* The 7-column grid is too narrow on phones, so show one day per row instead. */
   .calendar {
     grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .calendar-head,
+  .calendar-blank {
+    display: none;
+  }
+
+  .calendar-day {
+    flex-direction: row;
+    align-items: center;
+    min-height: 0;
+    padding: 10px 12px;
+  }
+
+  .calendar-day-top {
+    flex: 0 0 130px;
+  }
+
+  .calendar-weekday {
+    display: inline;
+  }
+
+  .calendar-meal {
+    font-size: 0.95rem;
+  }
+
+  /* Days, badge and buttons on the first line; the dinner picker gets the full width below. */
+  .slot-row {
+    grid-template-columns: minmax(0, 1fr) 38px 44px 44px;
+    grid-template-areas:
+      "range badge lock reroll"
+      "editor editor editor editor";
+  }
+
+  .slot-range {
+    grid-area: range;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .slot-row .category-badge {
+    grid-area: badge;
+  }
+
+  .slot-row .meal-editor {
+    grid-area: editor;
+  }
+
+  .slot-row .lock-button {
+    grid-area: lock;
+  }
+
+  .slot-row .lock-button + .icon-button {
+    grid-area: reroll;
   }
 }

@@ -1,3 +1,4 @@
+# Single-node k3s example. Build + import the image first (see README), then: kubectl apply -f k8s/dinner-shuffle.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -74,3 +75,23 @@ spec:
       port: 8000
       targetPort: http
       nodePort: 30080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dinner-shuffle
+  namespace: dinner-shuffle
+spec:
+  ingressClassName: traefik
+  rules:
+    # nip.io resolves <anything>.<ip>.nip.io to <ip>: replace 192.168.1.104 with your node's IP.
+    - host: dinner-shuffle.192.168.1.104.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dinner-shuffle
+                port:
+                  name: http

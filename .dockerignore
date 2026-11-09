@@ -3,4 +3,4 @@ __pycache__/
 *.pyo
 *.pyd
 .git/
-.DS_Store
+.DS_Storedata/

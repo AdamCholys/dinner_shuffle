@@ -1,92 +1,83 @@
 # Dinner Shuffle
 
-A small browser app for planning dinners for a month.
+A small browser app for planning dinners for a month. No dependencies: a single Python
+standard-library server plus static HTML/CSS/JS.
 
 ## What it does
 
-- lets you enter a list of possible dinners
-- stores your dinner list in a shared JSON file on the server
-- stores the latest generated monthly plan in a shared JSON file on the server
-- generates a monthly plan where one dinner is assigned to two consecutive days
-- can keep dinners starting with `Zupa` spaced apart by a configurable number of non-zupa meals
-- reshuffles the plan whenever you regenerate it
-- keeps the saved dinners available for other people using the same app instance
-- restores the latest generated plan for every user who opens the app
+- Polish interface for planning a month of dinners, one dinner per two consecutive days
+- keeps dinners starting with `Zupa` spaced apart by a configurable number of other dinners
+- Mon–Sun calendar view, plus a slot list where each slot can be changed, locked or re-rolled
+- regenerating a plan keeps locked slots and only reshuffles the rest
+- avoids last month's dinners when it can
+- keeps a plan per month (history), shared by everyone using the same app instance
+- refuses saves based on stale data, so two devices editing at once can't overwrite each other
 
 ## Run it
 
-Run the included server so the app can share saved dinners across browsers and sessions.
+Pick one. Each starts with an empty dinner list; add dinners in the app.
 
-Example:
+### Python (3.8 or newer, nothing to install)
 
 ```bash
-cd /home/gazel/vscode/obiad_shuffle
+git clone https://github.com/AdamCholys/dinner_shuffle.git
+cd dinner_shuffle
 python3 server.py
 ```
 
-Then open `http://localhost:8000`.
+Open `http://localhost:8000`. Other devices on the network can use `http://<this-computer's-IP>:8000`.
 
-## Run with Docker
-
-Build and start the app with Docker Compose:
+### Docker Compose
 
 ```bash
-cd /home/gazel/vscode/obiad_shuffle
-docker compose up --build
+git clone https://github.com/AdamCholys/dinner_shuffle.git
+cd dinner_shuffle
+docker compose up -d --build
 ```
 
-Then open `http://localhost:8080`.
+Open `http://localhost:8080`. Stop with `docker compose down`.
 
-The compose setup mounts `./data` into the container, so saved dinners and the latest plan stay on the host machine between container restarts.
+### Settings
 
-## Run on local k3s
+Environment variables, all optional:
 
-The app can run on a local k3s cluster with the manifest in `k8s/dinner-shuffle.yaml`.
+| Variable | Default | Meaning |
+|---|---|---|
+| `PORT` | `8000` (Compose: host port `8080`) | Port to listen on |
+| `BIND_ADDRESS` | `0.0.0.0` | Use `127.0.0.1` to allow only this computer |
+| `DATA_DIR` | `./data` | Where the data files are kept (Python only; Compose always uses `./data`) |
 
-### 1. Build the image locally
+Example: `PORT=9000 python3 server.py`, or `PORT=9000 docker compose up -d`.
+
+## Data
+
+Everything is stored in `data/` (ignored by git):
+
+- `dinners.json` - the dinner list
+- `plans.json` - one plan per month
+
+Back up by copying the folder. Both files carry a version number; the API answers
+`409 Conflict` when a save is based on an older version. A `latest_plan.json` from the first
+version of the app is imported into `plans.json` on start (the old file is left in place).
+
+The app has no login. Run it only on a home network or behind something that restricts access.
+
+## Run on k3s (single node)
+
+The manifest in `k8s/dinner-shuffle.yaml` uses a locally built image and k3s's `local-path`
+storage, so data survives pod restarts.
 
 ```bash
-cd /home/gazel/vscode/obiad_shuffle
 docker compose build
-```
-
-The compose file tags the image as `dinner-shuffle:latest`, which matches the k3s manifest.
-
-### 2. Import the image into k3s
-
-If your k3s uses the default containerd runtime, import the locally built image:
-
-```bash
 docker save dinner-shuffle:latest | sudo k3s ctr images import -
-```
-
-### 3. Deploy to the cluster
-
-```bash
 kubectl apply -f k8s/dinner-shuffle.yaml
-kubectl rollout restart deployment/dinner-shuffle -n dinner-shuffle
+kubectl -n dinner-shuffle rollout restart deployment/dinner-shuffle   # after rebuilding
 ```
 
-### 4. Open the app
-
-By default the service is exposed as a `NodePort` on port `30080`:
+Open `http://<node-ip>:30080`, or `http://dinner-shuffle.<node-ip>.nip.io` through the Traefik
+ingress after replacing `192.168.1.104` in the manifest with your node's IP.
 
 ```bash
-kubectl get nodes -o wide
+kubectl -n dinner-shuffle get pods
+kubectl -n dinner-shuffle logs deploy/dinner-shuffle
 ```
-
-Open `http://<node-ip>:30080`.
-
-For a single-node local setup, `http://localhost:30080` usually works.
-
-### 5. Check status
-
-```bash
-kubectl get pods -n dinner-shuffle
-kubectl get svc -n dinner-shuffle
-kubectl logs -n dinner-shuffle deploy/dinner-shuffle
-```
-
-The deployment uses a `PersistentVolumeClaim` backed by the k3s `local-path` storage class, so `data/dinners.json` and `data/latest_plan.json` remain persistent across pod restarts.
-
-Saved dinners are written to `data/dinners.json`, and the latest generated plan is written to `data/latest_plan.json`. If multiple people open the app from the same server, they will all use the same dinner list and see the latest saved monthly proposal.
